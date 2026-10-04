@@ -1,7 +1,7 @@
 # 🎓 LectureFetch — Automated Blackboard Lecture Extractor
 
 <p align="center">
-  <img src="social-card.png" alt="LectureFetch Social Card" width="100%">
+  <img src="website/social-card.png" alt="LectureFetch Social Card" width="100%">
 </p>
 
 <p align="center">
@@ -57,7 +57,7 @@ If you have Python installed and want to inspect or run directly from source:
 ```bash
 # 1. Clone the repository
 git clone https://github.com/lesyster/lecturefetch.git
-cd lecturefetch
+cd lecturefetch/app
 
 # 2. Install dependencies
 pip install -r requirements.txt
@@ -69,6 +69,7 @@ python app.py
 ### 📦 Building the Standalone `.exe` with PyInstaller
 
 ```bash
+cd lecturefetch/app
 pip install pyinstaller
 python -m PyInstaller --clean LectureFetch.spec
 ```
@@ -77,12 +78,24 @@ python -m PyInstaller --clean LectureFetch.spec
 
 ## 📂 Repository Structure
 
-- `app.py` — CustomTkinter modern desktop GUI application.
-- `core_engine.py` — Background engine, CDP attach, and Blackboard REST extraction pipeline.
-- `LectureFetch.spec` — PyInstaller standalone binary packaging specification.
-- `requirements.txt` — Python dependencies (`customtkinter`, `pillow`, `playwright`).
-- `index.html` — Official landing page hosted via GitHub Pages.
-- `social-card.png` — High-DPI GitHub Social Card image.
+```text
+lecturefetch/
+├── app/               # Standalone application source & PyInstaller build spec
+│   ├── app.py             # CustomTkinter modern desktop GUI
+│   ├── core_engine.py     # CDP browser attach & Blackboard REST sync engine
+│   ├── requirements.txt   # Python dependencies
+│   ├── LectureFetch.spec  # PyInstaller packaging configuration
+│   ├── logo_rounded.png   # Application UI badge
+│   └── app_icon.ico       # Executable Windows application icon
+│
+├── website/           # Landing page website & assets
+│   ├── index.html         # Official web landing page
+│   ├── logo.png           # Branding assets
+│   ├── social-card.png    # GitHub social preview card
+│   └── favicon.png        # Website favicon
+│
+└── README.md          # Comprehensive user manual, privacy guide & releases
+```
 
 ---
 
