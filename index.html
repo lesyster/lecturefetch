@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.classList.add("js")</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LectureFetch: download all your Blackboard lecture slides in one click</title>
+<meta name="description" content="A free, open-source Windows app that downloads and organizes your Blackboard course files into folders on your computer. Made by Jad Mehtar (@lesyster).">
+<meta property="og:title" content="LectureFetch: Download All Blackboard Slides in One Click">
+<meta property="og:description" content="A free, open-source Windows app that downloads and organizes your Blackboard course files into folders on your computer. Made by Jad Mehtar.">
+<meta property="og:image" content="https://lesyster.github.io/lecturefetch/social-card.png">
+<meta property="og:url" content="https://lesyster.github.io/lecturefetch/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://lesyster.github.io/lecturefetch/social-card.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0d1b3e;--ink-2:#2b3a5c;--muted:#55627d;--rule:#d8deec;--paper:#fff;--wash:#eef2fb;--accent:#2358e6;--accent-d:#1a45b8;--ok:#14804a;
+--head:'Manrope',system-ui,sans-serif;--sans:'Public Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'JetBrains Mono',ui-monospace,Consolas,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.65;font-size:16.5px;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+.notice{background:var(--ink);color:#cfd8ec;font-size:.82rem;padding:8px 0}
+.notice .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+header{background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid transparent;position:sticky;top:0;z-index:20;transition:border-color .2s,box-shadow .2s}
+header.scrolled{border-color:var(--rule);box-shadow:0 6px 20px -14px rgba(13,27,62,.4)}
+.bar{display:flex;align-items:center;justify-content:space-between;height:68px}
+.brand{font-family:var(--head);font-weight:800;font-size:1.2rem;text-decoration:none;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
+.brand i{display:block;width:12px;height:12px;border-radius:3px;background:var(--accent);transform:rotate(45deg)}
+nav{display:flex;align-items:center;gap:30px}
+nav a{text-decoration:none;font-size:.95rem;color:var(--ink-2);font-weight:500}
+nav a:hover{color:var(--accent)}
+.btn{display:inline-block;background:var(--accent);color:#fff!important;padding:12px 24px;border-radius:8px;font-weight:600;font-size:.97rem;text-decoration:none;transition:background .15s,transform .15s}
+.btn:hover{background:var(--accent-d);transform:translateY(-1px)}
+.btn.line{background:transparent;color:var(--ink)!important;box-shadow:inset 0 0 0 1.5px var(--ink)}
+.btn.line:hover{background:#fff}
+.hero{padding:72px 0 88px;background:var(--wash)}
+.hero-grid{display:grid;grid-template-columns:1fr 1.08fr;gap:56px;align-items:center}
+h1{font-family:var(--head);font-size:3.4rem;line-height:1.05;letter-spacing:-.04em;font-weight:800;margin-bottom:22px}
+.lede{font-size:1.12rem;color:var(--ink-2);max-width:30em;margin-bottom:30px}
+.actions{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:36px}
+.facts{display:grid;grid-template-columns:repeat(2,auto);gap:0 40px;justify-content:start;font-size:.92rem;border-top:1px solid #c9d2e6}
+.facts div{padding:10px 0;border-bottom:1px solid #c9d2e6;display:flex;gap:18px;justify-content:space-between}
+.facts dt{color:var(--muted)}.facts dd{font-weight:600}
+.win{border-radius:12px;background:#fff;box-shadow:0 30px 60px -28px rgba(13,27,62,.55);overflow:hidden}
+.win-top{display:flex;justify-content:space-between;align-items:center;background:#fff;border-bottom:1px solid var(--rule);padding:11px 16px;font-size:.78rem;color:var(--muted)}
+.win-top b{color:var(--ink);font-weight:700}.status{color:var(--ok);font-weight:600}
+.win-body{display:grid;grid-template-columns:200px 1fr;min-height:300px}
+.tree{border-right:1px solid var(--rule);padding:14px;font-size:.82rem;background:#f8faff}
+.tree p{color:var(--muted);font-size:.74rem;margin-bottom:10px;word-break:break-all}
+.tree ul{list-style:none;font-family:var(--mono);font-size:.78rem}
+.tree li{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed var(--rule);opacity:.28;transition:opacity .3s}
+.tree li.on{opacity:1}.tree li span{color:var(--ok)}
+.log{background:#0b1426;color:#a9f0c8;font-family:var(--mono);font-size:.76rem;line-height:1.75;padding:14px 16px;min-height:300px}
+.log div{white-space:pre-wrap;word-break:break-word}.log .dim{color:#7488a8}
+.caret::after{content:"";display:inline-block;width:7px;height:13px;background:#a9f0c8;margin-left:2px;vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.trust{border-bottom:1px solid var(--rule);padding:18px 0;font-size:.97rem;color:var(--ink-2)}
+.trust strong{font-family:var(--head);color:var(--ink);margin-right:8px}
+section{padding:88px 0;border-bottom:1px solid var(--rule)}
+h2{font-family:var(--head);font-size:2.3rem;line-height:1.12;letter-spacing:-.035em;font-weight:800;margin-bottom:14px}
+.split{display:grid;grid-template-columns:5fr 7fr;gap:64px}
+.split>div:first-child p{color:var(--muted);max-width:26em}
+.head p{color:var(--muted);max-width:34em}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:44px}
+.tile{background:var(--wash);border-radius:14px;padding:28px;transition:transform .2s,box-shadow .2s,background .2s}
+.tile:hover{transform:translateY(-4px);background:#fff;box-shadow:0 18px 36px -22px rgba(13,27,62,.5),inset 0 0 0 1px var(--rule)}
+.tile h3{font-family:var(--head);font-size:1.12rem;letter-spacing:-.01em;margin-bottom:8px}
+.tile p{color:var(--ink-2);font-size:.96rem}
+.tile.big{grid-column:span 2;background:var(--ink);color:#fff}
+.tile.big p{color:#c4d0e8}
+.tile.big:hover{background:var(--ink);box-shadow:0 18px 36px -22px rgba(13,27,62,.8)}
+code{font-family:var(--mono);font-size:.86em;background:rgba(13,27,62,.07);padding:1px 6px;border-radius:4px}
+.tile.big code{background:rgba(255,255,255,.14)}
+ol.steps{list-style:none;counter-reset:s;position:relative;margin-left:16px;--p:0}
+ol.steps::before,ol.steps::after{content:"";position:absolute;left:0;top:14px;width:3px;border-radius:2px;background:var(--rule);height:calc(100% - 14px)}
+ol.steps::after{background:var(--accent);height:calc((100% - 14px)*var(--p))}
+ol.steps li{counter-increment:s;position:relative;padding:0 0 38px 40px}
+ol.steps li:last-child{padding-bottom:0}
+ol.steps li::before{content:counter(s);position:absolute;left:-16px;top:-2px;width:34px;height:34px;border-radius:50%;background:#fff;color:var(--ink);box-shadow:inset 0 0 0 2px var(--rule);font-family:var(--head);font-weight:800;display:grid;place-items:center;transition:background .3s,color .3s,box-shadow .3s}
+ol.steps li.on::before{background:var(--accent);color:#fff;box-shadow:none}
+ol.steps h3{font-family:var(--head);font-size:1.2rem;letter-spacing:-.015em;margin-bottom:4px}
+ol.steps p{color:var(--ink-2);max-width:36em}
+.cta{background:var(--ink);color:#fff;border:0}
+.cta .wrap{display:flex;justify-content:space-between;align-items:center;gap:30px;flex-wrap:wrap}
+.cta h2{margin:0 0 6px}.cta p{color:#c4d0e8}
+footer{background:#08132b;color:#a9b7d2;padding:44px 0;font-size:.9rem}
+footer .wrap{display:grid;grid-template-columns:1.2fr 1fr;gap:48px}
+footer strong{color:#fff}footer a{color:#fff}footer p+p{margin-top:10px}
+.js .rv{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s)}
+.js .rv.in{opacity:1;transform:none}
+.js .rv.tile.in:hover{transform:translateY(-4px);transition-delay:0s}
+@media (max-width:900px){.hero-grid,.split,footer .wrap{grid-template-columns:1fr;gap:36px}h1{font-size:2.6rem}nav a:not(.btn){display:none}.tiles{grid-template-columns:1fr 1fr}}
+@media (max-width:620px){.win-body{grid-template-columns:1fr}.tree{border-right:0;border-bottom:1px solid var(--rule)}.facts{grid-template-columns:1fr}.tiles{grid-template-columns:1fr}.tile.big{grid-column:auto}section{padding:60px 0}.hero{padding:48px 0 56px}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.caret::after{animation:none}.js .rv{opacity:1;transform:none;transition:none}}
+
+/* theme: orange + white, command-line */
+:root{--ink:#14110f;--ink-2:#3a342f;--muted:#6b635c;--rule:#e6e0da;--wash:#fff3e8;--accent:#ff6b00;--accent-d:#e55a00;
+--head:'Bricolage Grotesque',system-ui,sans-serif;--sans:'Hanken Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif}
+::selection{background:var(--accent);color:var(--ink)}
+.notice{background:var(--ink);color:#f0e6dc}
+header{background:rgba(255,255,255,.94)}
+header.scrolled{border-color:var(--ink);box-shadow:none}
+.brand{font-weight:800;letter-spacing:-.03em}
+.brand i{width:auto;height:auto;transform:none;border-radius:6px;padding:3px 8px;background:var(--accent);color:var(--ink);font:700 .95rem var(--mono);letter-spacing:0}
+.brand i::before{content:">_"}
+nav a:hover{color:var(--accent-d)}
+.btn{color:var(--ink)!important;border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);padding:11px 22px;font-weight:700;transition:transform .12s,box-shadow .12s,background .12s}
+.btn:hover{background:var(--accent);transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}
+.btn.line{background:#fff;box-shadow:4px 4px 0 var(--ink)}
+.btn.line:hover{background:var(--wash);box-shadow:2px 2px 0 var(--ink)}
+.hero{background:#fff;padding:68px 0 92px}
+.hero-grid{grid-template-columns:1fr 1.22fr;gap:60px}
+h1{font-size:3.7rem;line-height:1.02;letter-spacing:-.045em}
+.lede{color:var(--ink-2)}
+.facts{border-top:2px solid var(--ink)}
+.facts div{border-bottom:1px solid var(--rule)}
+.win{border:2px solid var(--ink);border-radius:10px;box-shadow:10px 10px 0 var(--accent);background:var(--ink)}
+.win-top{background:var(--ink);border-bottom:1px solid #3a332d;color:#a89b8e;font-family:var(--mono);font-size:.74rem}
+.win-top b{color:#fff;font-weight:500}
+.status{color:#7dffb0}
+.tree{background:#1c1815;border-right:1px solid #3a332d;color:#d9cfc6}
+.tree p{color:#8d8278;font-family:var(--mono)}
+.tree li{border-bottom:1px dashed #3a332d}
+.tree li span{color:#7dffb0}
+.log{background:#0e0c0a;color:#f3e9df;min-height:320px;font-size:.78rem}
+.log .dim{color:#8d8278}
+.log .pr{color:var(--accent);font-weight:700}
+.caret::after{background:var(--accent)}
+.trust{background:var(--wash);border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);color:var(--ink-2)}
+.trust strong{font-family:var(--head);color:var(--ink)}
+section{border-bottom:1px solid var(--rule)}
+h2{letter-spacing:-.04em}
+.tile{background:#fff;border:2px solid var(--ink);border-radius:12px;box-shadow:5px 5px 0 var(--ink);transition:transform .15s,box-shadow .15s}
+.tile:hover{background:#fff;transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--accent)}
+.js .rv.tile.in:hover{transform:translate(-2px,-2px);transition-delay:0s}
+.tile.big{background:var(--accent);color:var(--ink)}
+.tile.big p{color:#2a1608}
+.tile.big:hover{background:var(--accent);box-shadow:8px 8px 0 var(--ink)}
+.tile.big code{background:rgba(255,255,255,.55)}
+code{background:var(--wash)}
+ol.steps li.on::before{color:var(--ink)}
+ol.steps li::before{box-shadow:inset 0 0 0 2px var(--ink)}
+ol.steps li.on::before{box-shadow:inset 0 0 0 2px var(--ink)}
+.cta{background:var(--accent);color:var(--ink)}
+.cta p{color:#3a1d08}
+.cta .btn{background:#fff}
+.cta .btn:hover{background:var(--wash)}
+footer{background:var(--ink);color:#c9bdb0}
+@media (max-width:900px){h1{font-size:2.7rem}.win{box-shadow:6px 6px 0 var(--accent)}}
+
+/* round 5: lighter orange mix, light footer, stacked terminal on narrow windows */
+:root{--accent:#ff7a00;--accent-d:#f26000;--accent-2:#ffa83d;--wash:#fff1e0}
+.brand img{display:block;width:34px;height:34px;object-fit:contain}
+.btn:hover{background:var(--accent-2)}
+.log .pr{color:var(--accent-2)}
+.caret::after{background:var(--accent-2)}
+.win{box-shadow:10px 10px 0 var(--accent-2)}
+.tile:hover{box-shadow:8px 8px 0 var(--accent-2)}
+.tile.big{background:var(--accent-2)}
+.tile.big:hover{background:var(--accent-2)}
+.cta{background:var(--accent-2)}
+.cta .btn{background:#fff}
+ol.steps li.on::before{background:var(--accent-2)}
+ol.steps::after{background:linear-gradient(var(--accent-2),var(--accent))}
+footer{background:var(--wash);color:var(--ink-2);border-top:2px solid var(--ink)}
+footer strong{color:var(--ink)}
+footer a{color:var(--ink);text-decoration-thickness:2px;text-underline-offset:3px;text-decoration-color:var(--accent)}
+footer a:hover{background:var(--accent-2)}
+.hero-grid>*{min-width:0}
+@media (max-width:1100px){
+  .win-body{grid-template-columns:1fr}
+  .tree{border-right:0;border-bottom:1px solid #3a332d}
+  .tree ul{display:flex;flex-wrap:wrap;gap:8px}
+  .tree li{border:1px solid #3a332d;border-radius:6px;padding:4px 10px;gap:10px;opacity:.3}
+  .tree li.on{opacity:1}
+  .tree p{margin-bottom:10px}
+}
+
+/* steps: keep the progress line underneath the numbered circles */
+ol.steps{isolation:isolate}
+ol.steps::before,ol.steps::after{z-index:0}
+ol.steps li{z-index:1}
+ol.steps li::before{z-index:2}
+
+/* ===== mobile fixes (last on purpose: earlier theme rules were overriding the mobile media queries) ===== */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:72px}
+body{overflow-x:clip}
+.support{background:#fff;border-bottom:1px solid var(--rule);padding:64px 0}
+.support .wrap{text-align:center;max-width:680px;margin:0 auto}
+.support h2{font-size:2rem;margin-bottom:8px}
+.support p{color:var(--ink-2);font-size:1.1rem;margin-bottom:24px}
+.wish{display:inline-flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px 14px;background:var(--wash);border:2px solid var(--ink);border-radius:12px;padding:12px 22px;box-shadow:5px 5px 0 var(--ink)}
+.wish span{font-family:var(--mono);font-weight:700;font-size:1.05rem;color:var(--ink)}
+.wish button{background:var(--accent);color:var(--ink);border:2px solid var(--ink);border-radius:8px;padding:8px 16px;min-height:40px;font-weight:800;font-family:var(--sans);font-size:.9rem;cursor:pointer;transition:transform .1s}
+.wish button:active{transform:scale(.95)}
+
+@media (max-width:900px){
+  .hero-grid{grid-template-columns:1fr;gap:36px}
+  .split,footer .wrap{grid-template-columns:1fr;gap:32px}
+  .hero{padding:48px 0 56px}
+  .wrap{padding:0 20px}
+  h1{font-size:2.5rem}
+  .tiles{grid-template-columns:1fr 1fr}
+}
+@media (max-width:620px){
+  body{font-size:16px}
+  .notice{font-size:.74rem;padding:6px 0}
+  .notice .wrap{flex-direction:column;gap:2px}
+  .bar{height:58px}
+  .brand{font-size:1.05rem;gap:8px}
+  .brand img{width:28px;height:28px}
+  nav .btn{padding:8px 14px;font-size:.88rem;box-shadow:3px 3px 0 var(--ink)}
+  h1{font-size:2.15rem;line-height:1.06;letter-spacing:-.035em;margin-bottom:16px}
+  .lede{font-size:1.02rem;margin-bottom:24px}
+  .actions{flex-direction:column;gap:14px;margin-bottom:28px}
+  .actions .btn{width:100%;text-align:center;padding:14px 18px}
+  .facts{grid-template-columns:1fr}
+  .win{box-shadow:6px 6px 0 var(--accent-2)}
+  .win-top{flex-wrap:wrap;gap:4px 12px;padding:10px 12px}
+  .tree{padding:12px}
+  .log{min-height:300px;font-size:.72rem;padding:12px}
+  .trust{font-size:.92rem}
+  .trust strong{display:block;margin-bottom:2px}
+  section{padding:56px 0}
+  h2{font-size:1.8rem}
+  .tiles{grid-template-columns:1fr;gap:16px;margin-top:32px}
+  .tile{padding:22px}
+  .tile.big{grid-column:auto}
+  ol.steps li{padding:0 0 30px 34px}
+  .cta .wrap{flex-direction:column;align-items:stretch}
+  .cta .btn{width:100%;text-align:center;padding:14px 18px}
+  .support{padding:48px 0}
+  .support h2{font-size:1.6rem}
+  .support p{font-size:1rem;margin-bottom:20px}
+  .wish{width:100%;padding:12px 14px}
+  .wish span{font-size:.92rem}
+  footer{padding:36px 0}
+}
+@media (max-width:360px){
+  h1{font-size:1.95rem}
+  .wish span{font-size:.82rem}
+}
+/* touch screens: no sticky hover states */
+@media (hover:none){
+  .tile:hover,.js .rv.tile.in:hover{transform:none;box-shadow:5px 5px 0 var(--ink)}
+  .tile.big:hover{box-shadow:5px 5px 0 var(--ink)}
+  .btn:hover{transform:none;box-shadow:4px 4px 0 var(--ink)}
+}
+</style>
+</head>
+<body>
+
+<div class="notice"><div class="wrap">
+  <span>Independent student open-source project</span>
+  <span>Not affiliated with Anthology / Blackboard</span>
+</div></div>
+
+<header><div class="wrap bar">
+  <a class="brand" href="#top"><img src="logo.png" alt="" width="34" height="34">LectureFetch</a>
+  <nav aria-label="Main">
+    <a href="#features">Features</a>
+    <a href="#how-it-works">How it works</a>
+    <a href="#support">Support</a>
+    <a class="btn" href="https://github.com/lesyster/lecturefetch/releases/latest/download/LectureFetch.exe">Download</a>
+  </nav>
+</div></header>
+
+<main id="top">
+<div class="hero"><div class="wrap hero-grid">
+  <div>
+    <h1>Every lecture slide, downloaded in one click.</h1>
+    <p class="lede">Sign in to your official Blackboard once. LectureFetch finds your courses and saves every lecture, syllabus, and problem set into organized folders on your computer.</p>
+    <div class="actions">
+      <a class="btn" href="https://github.com/lesyster/lecturefetch/releases/latest/download/LectureFetch.exe">Download for Windows (.exe)</a>
+      <a class="btn line" href="#how-it-works">How it works</a>
+    </div>
+    <dl class="facts">
+      <div><dt>Platform</dt><dd>Windows</dd></div>
+      <div><dt>Price</dt><dd>Free</dd></div>
+      <div><dt>Sign-in</dt><dd>Official Browser</dd></div>
+      <div><dt>Source</dt><dd>Open source</dd></div>
+    </dl>
+  </div>
+
+  <div class="win" aria-label="Preview of the app syncing five courses">
+    <div class="win-top"><b>Command Prompt: lecture-fetch</b><span>Session: <span class="status">Connected</span></span></div>
+    <div class="win-body">
+      <div class="tree">
+        <p>C:/Desktop/Lectures</p>
+        <ul id="tree">
+          <li>MTH 201<span>0</span></li>
+          <li>PHY 201<span>0</span></li>
+          <li>COE 201<span>0</span></li>
+          <li>GNE 212<span>0</span></li>
+          <li>ENG 102<span>0</span></li>
+        </ul>
+      </div>
+      <div class="log" id="log" aria-live="off"></div>
+    </div>
+  </div>
+</div></div>
+
+<div class="trust"><div class="wrap"><strong>Sign-in stays with your university.</strong> You log in on your official SSO portal in your normal browser. The app never sees your password.</div></div>
+
+<section id="features"><div class="wrap">
+  <div class="head"><h2>Built for university students.</h2><p>Skip clicking through 50 separate PDF links the night before a midterm.</p></div>
+  <div class="tiles">
+    <div class="tile big"><h3>Bulk sync</h3><p>Downloads slides, syllabus files and problem sets for every course simultaneously. Your files land in folders like <code>MTH 201/</code> and <code>PHY 201/</code>, ready to use offline.</p></div>
+    <div class="tile"><h3>Any major</h3><p>Reads your Blackboard portal directly, so Engineering, Business, Arts, Sciences and Medicine students all see their own registered courses.</p></div>
+    <div class="tile"><h3>Smart incremental sync</h3><p>Skips files you already have and only picks up new uploads when a professor posts them.</p></div>
+    <div class="tile"><h3>Private by design</h3><p>Your session and your files stay entirely on your own computer. Nothing is uploaded or transmitted anywhere.</p></div>
+    <div class="tile"><h3>Free and open source</h3><p>No paywall and no subscription traps. Built by a student so classmates can focus on studying.</p></div>
+  </div>
+</div></section>
+
+<section id="how-it-works"><div class="wrap split">
+  <div>
+    <h2>Set up in under a minute.</h2>
+    <p>Three steps, and the first one only happens once.</p>
+  </div>
+  <ol class="steps">
+    <li><h3>Connect your account</h3><p>Click Connect Account. Your real browser opens to your university's official Blackboard page. Sign in securely and approve any 2FA prompts.</p></li>
+    <li><h3>Select your courses</h3><p>The app lists all your registered semester courses. Select all or choose only the classes you need.</p></li>
+    <li><h3>Start extraction</h3><p>Click Start Extraction and watch the live log as your lectures are organized into your chosen folder.</p></li>
+  </ol>
+</div></section>
+
+<section id="support" class="support">
+  <div class="wrap">
+    <h2>🧡 Support the Project</h2>
+    <p>like this tool? feel free to help out (+961 70 007 193)</p>
+    <div class="wish">
+      <span>Wish Money: <strong>+961 70 007 193</strong></span>
+      <button type="button" onclick="navigator.clipboard.writeText('+96170007193'); this.innerText='✓ Copied!'; setTimeout(()=>this.innerText='Copy', 2000)">Copy</button>
+    </div>
+  </div>
+</section>
+
+<section class="cta"><div class="wrap">
+  <div><h2>Get the app.</h2><p>100% free and open-source, on Windows.</p></div>
+  <a class="btn" href="https://github.com/lesyster/lecturefetch/releases/latest/download/LectureFetch.exe">Download for Windows (.exe)</a>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <div>
+    <p><strong>LectureFetch</strong></p>
+    <p>Built by <strong>Jad Mehtar</strong> (<a href="https://github.com/lesyster" target="_blank">@lesyster</a>), Computer Engineering.</p>
+  </div>
+  <div>
+    <p>Not affiliated with or endorsed by Anthology / Blackboard Inc. Independent open-source student utility.</p>
+    <p><a href="https://github.com/lesyster/lecturefetch" target="_blank">View the source on GitHub</a></p>
+  </div>
+</div></footer>
+
+<script>
+(function(){
+  var log=document.getElementById('log'),items=document.querySelectorAll('#tree li');
+  var lines=[
+    ['','lecture-fetch --all'],
+    ['14:15:02','Connected to official Blackboard session.'],
+    ['14:15:03','Discovered 5 active courses: MTH 201, PHY 201, COE 201, GNE 212, ENG 102.'],
+    ['14:15:05','[SYNC] Starting: MTH 201 - Multivariable Calculus'],
+    ['14:15:08','  [SAVED] Lecture 14 - Infinite Sequences.pdf (1.4 MB)'],
+    ['14:15:10','  [SAVED] Lecture 13 - Sandwich Theorem.pdf (1.1 MB)'],
+    ['14:15:12','[ALL DONE] Synced 28 new files across 5 courses!']
+  ];
+  var counts=[6,5,6,5,6];
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function reset(){log.innerHTML='';items.forEach(function(li){li.classList.remove('on');li.lastChild.textContent='0'})}
+  function showTree(){items.forEach(function(li,i){li.classList.add('on');li.lastChild.textContent=counts[i]})}
+  function line(i){
+    var d=document.createElement('div');
+    d.innerHTML=lines[i][0]?'<span class="dim">['+lines[i][0]+']</span> ':'<span class="pr">C:\\Users\\you&gt;</span> ';
+    var t=document.createElement('span');d.appendChild(t);log.appendChild(d);return t;
+  }
+  if(reduce){lines.forEach(function(l,i){line(i).textContent=l[1]});showTree();return}
+  function run(){
+    reset();var i=0;
+    (function next(){
+      if(i>=lines.length){setTimeout(run,5500);return}
+      var el=line(i),txt=lines[i][1],n=0,cur=i;
+      el.parentNode.classList.add('caret');
+      (function type(){
+        el.textContent=txt.slice(0,++n);
+        if(n<txt.length){setTimeout(type,16)}
+        else{
+          el.parentNode.classList.remove('caret');
+          if(cur===3){items[0].classList.add('on');items[0].lastChild.textContent=6}
+          if(cur===6){showTree()}
+          i++;setTimeout(next,cur===0?500:(cur===2?650:420));
+        }
+      })();
+    })();
+  }
+  run();
+})();
+</script>
+<script>
+(function(){
+  var hd=document.querySelector('header');
+  function sc(){hd.classList.toggle('scrolled',window.scrollY>8)}sc();addEventListener('scroll',sc,{passive:true});
+  var sel=['.hero-grid>div:first-child > *','.hero .win','.trust .wrap','section h2','.head p','.split>div:first-child p','.tile','.cta .wrap > *'];
+  var els=[];sel.forEach(function(s){document.querySelectorAll(s).forEach(function(e,i){if(e.classList.contains('rv'))return;e.classList.add('rv');e.style.setProperty('--d',(i%6*0.08)+'s');els.push(e)})});
+  var steps=document.querySelectorAll('ol.steps li'),ol=document.querySelector('ol.steps');
+  if(!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion: reduce)').matches){els.forEach(function(e){e.classList.add('in')});steps.forEach(function(l){l.classList.add('on')});ol.style.setProperty('--p',1);return}
+  var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}})},{threshold:.15,rootMargin:'0px 0px -6% 0px'});
+  els.forEach(function(e){io.observe(e)});
+  function prog(){
+    var r=ol.getBoundingClientRect(),vh=innerHeight,p=(vh*.62-r.top)/r.height;p=Math.max(0,Math.min(1,p));
+    ol.style.setProperty('--p',p);
+    steps.forEach(function(l){l.classList.toggle('on',l.getBoundingClientRect().top<vh*.62)});
+  }
+  prog();addEventListener('scroll',prog,{passive:true});addEventListener('resize',prog);
+})();
+</script>
+</body>
+</html>
