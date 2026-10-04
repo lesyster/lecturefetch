@@ -209,9 +209,20 @@ def detect_supported_browser() -> tuple[str | None, str | None]:
     return candidates[0] if candidates else (None, None)
 
 def sanitize_filename(filename):
-    """Clean filename of invalid Windows path characters."""
-    clean = re.sub(r'[\\/*?:"<>|]', "_", filename)
+    """Clean filename of invalid Windows path characters, control characters, and reserved device names."""
+    if not filename:
+        return "document"
+    # Remove control characters (0-31) and invalid Windows filename characters
+    clean = re.sub(r'[\x00-\x1f\\/*?:"<>|]', "_", str(filename))
     clean = clean.strip(". ")
+    # Handle Windows reserved device names (CON, PRN, AUX, NUL, COM1-9, LPT1-9)
+    base, ext = os.path.splitext(clean)
+    reserved = {"CON", "PRN", "AUX", "NUL", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"}
+    if base.upper() in reserved:
+        clean = f"_{clean}"
+    # Truncate overly long names to prevent MAX_PATH filesystem failures (limit to 180 chars)
+    if len(clean) > 180:
+        clean = base[:170] + ext
     return clean or "document"
 
 
