@@ -50,6 +50,42 @@
 
 ---
 
+## 🛠️ Running from Source (Developers)
+
+If you have Python installed and want to inspect or run directly from source:
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/lesyster/lecturefetch.git
+cd lecturefetch
+
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Launch application
+python app.py
+```
+
+### 📦 Building the Standalone `.exe` with PyInstaller
+
+```bash
+pip install pyinstaller
+python -m PyInstaller --clean LectureFetch.spec
+```
+
+---
+
+## 📂 Repository Structure
+
+- `app.py` — CustomTkinter modern desktop GUI application.
+- `core_engine.py` — Background engine, CDP attach, and Blackboard REST extraction pipeline.
+- `LectureFetch.spec` — PyInstaller standalone binary packaging specification.
+- `requirements.txt` — Python dependencies (`customtkinter`, `pillow`, `playwright`).
+- `index.html` — Official landing page hosted via GitHub Pages.
+- `social-card.png` — High-DPI GitHub Social Card image.
+
+---
+
 ## 🧡 Support the Project
 
 Like this tool? Feel free to help out:
