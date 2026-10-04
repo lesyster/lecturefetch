@@ -188,6 +188,71 @@ ol.steps{isolation:isolate}
 ol.steps::before,ol.steps::after{z-index:0}
 ol.steps li{z-index:1}
 ol.steps li::before{z-index:2}
+
+/* ===== mobile fixes (last on purpose: earlier theme rules were overriding the mobile media queries) ===== */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:72px}
+body{overflow-x:clip}
+.support{background:#fff;border-bottom:1px solid var(--rule);padding:64px 0}
+.support .wrap{text-align:center;max-width:680px;margin:0 auto}
+.support h2{font-size:2rem;margin-bottom:8px}
+.support p{color:var(--ink-2);font-size:1.1rem;margin-bottom:24px}
+.wish{display:inline-flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px 14px;background:var(--wash);border:2px solid var(--ink);border-radius:12px;padding:12px 22px;box-shadow:5px 5px 0 var(--ink)}
+.wish span{font-family:var(--mono);font-weight:700;font-size:1.05rem;color:var(--ink)}
+.wish button{background:var(--accent);color:var(--ink);border:2px solid var(--ink);border-radius:8px;padding:8px 16px;min-height:40px;font-weight:800;font-family:var(--sans);font-size:.9rem;cursor:pointer;transition:transform .1s}
+.wish button:active{transform:scale(.95)}
+
+@media (max-width:900px){
+  .hero-grid{grid-template-columns:1fr;gap:36px}
+  .split,footer .wrap{grid-template-columns:1fr;gap:32px}
+  .hero{padding:48px 0 56px}
+  .wrap{padding:0 20px}
+  h1{font-size:2.5rem}
+  .tiles{grid-template-columns:1fr 1fr}
+}
+@media (max-width:620px){
+  body{font-size:16px}
+  .notice{font-size:.74rem;padding:6px 0}
+  .notice .wrap{flex-direction:column;gap:2px}
+  .bar{height:58px}
+  .brand{font-size:1.05rem;gap:8px}
+  .brand img{width:28px;height:28px}
+  nav .btn{padding:8px 14px;font-size:.88rem;box-shadow:3px 3px 0 var(--ink)}
+  h1{font-size:2.15rem;line-height:1.06;letter-spacing:-.035em;margin-bottom:16px}
+  .lede{font-size:1.02rem;margin-bottom:24px}
+  .actions{flex-direction:column;gap:14px;margin-bottom:28px}
+  .actions .btn{width:100%;text-align:center;padding:14px 18px}
+  .facts{grid-template-columns:1fr}
+  .win{box-shadow:6px 6px 0 var(--accent-2)}
+  .win-top{flex-wrap:wrap;gap:4px 12px;padding:10px 12px}
+  .tree{padding:12px}
+  .log{min-height:300px;font-size:.72rem;padding:12px}
+  .trust{font-size:.92rem}
+  .trust strong{display:block;margin-bottom:2px}
+  section{padding:56px 0}
+  h2{font-size:1.8rem}
+  .tiles{grid-template-columns:1fr;gap:16px;margin-top:32px}
+  .tile{padding:22px}
+  .tile.big{grid-column:auto}
+  ol.steps li{padding:0 0 30px 34px}
+  .cta .wrap{flex-direction:column;align-items:stretch}
+  .cta .btn{width:100%;text-align:center;padding:14px 18px}
+  .support{padding:48px 0}
+  .support h2{font-size:1.6rem}
+  .support p{font-size:1rem;margin-bottom:20px}
+  .wish{width:100%;padding:12px 14px}
+  .wish span{font-size:.92rem}
+  footer{padding:36px 0}
+}
+@media (max-width:360px){
+  h1{font-size:1.95rem}
+  .wish span{font-size:.82rem}
+}
+/* touch screens: no sticky hover states */
+@media (hover:none){
+  .tile:hover,.js .rv.tile.in:hover{transform:none;box-shadow:5px 5px 0 var(--ink)}
+  .tile.big:hover{box-shadow:5px 5px 0 var(--ink)}
+  .btn:hover{transform:none;box-shadow:4px 4px 0 var(--ink)}
+}
 </style>
 </head>
 <body>
@@ -267,13 +332,13 @@ ol.steps li::before{z-index:2}
   </ol>
 </div></section>
 
-<section id="support" style="background:#fff; border-bottom:1px solid var(--rule); padding:64px 0;">
-  <div class="wrap" style="text-align:center; max-width:680px; margin:0 auto;">
-    <h2 style="font-size:2rem; margin-bottom:8px;">🧡 Support the Project</h2>
-    <p style="color:var(--ink-2); font-size:1.1rem; margin-bottom:24px;">like this tool? feel free to help out (+961 70 007 193)</p>
-    <div style="display:inline-flex; align-items:center; gap:14px; background:var(--wash); border:2px solid var(--ink); border-radius:12px; padding:12px 22px; box-shadow:5px 5px 0 var(--ink);">
-      <span style="font-family:var(--mono); font-weight:700; font-size:1.05rem; color:var(--ink);">Wish Money: <strong>+961 70 007 193</strong></span>
-      <button onclick="navigator.clipboard.writeText('+96170007193'); this.innerText='✓ Copied!'; setTimeout(()=>this.innerText='Copy', 2000)" style="background:var(--accent); color:var(--ink); border:2px solid var(--ink); border-radius:8px; padding:6px 14px; font-weight:800; font-family:var(--sans); cursor:pointer; font-size:0.9rem; transition:transform 0.1s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">Copy</button>
+<section id="support" class="support">
+  <div class="wrap">
+    <h2>🧡 Support the Project</h2>
+    <p>like this tool? feel free to help out (+961 70 007 193)</p>
+    <div class="wish">
+      <span>Wish Money: <strong>+961 70 007 193</strong></span>
+      <button type="button" onclick="navigator.clipboard.writeText('+96170007193'); this.innerText='✓ Copied!'; setTimeout(()=>this.innerText='Copy', 2000)">Copy</button>
     </div>
   </div>
 </section>
